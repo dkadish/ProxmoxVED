@@ -19,6 +19,13 @@ var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 #var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
 
+# Values the install script accepts up front (see "Application Settings").
+# A non-empty var_ai_base_url reuses that endpoint; blank installs Ollama locally.
+export var_ai_base_url="${var_ai_base_url:-}"
+export var_ai_api_key="${var_ai_api_key:-}"
+export var_ai_vision_model="${var_ai_vision_model:-llava:7b}"
+export var_ai_text_model="${var_ai_text_model:-gemma3}"
+
 header_info "$APP"
 variables
 color

@@ -29,14 +29,47 @@
       }
     }
   ],
+  "app_vars": [
+    {
+      "name": "var_ai_base_url",
+      "label": "AI Endpoint URL",
+      "type": "text",
+      "default": "",
+      "help": "Existing Ollama/OpenAI-compatible endpoint (e.g. http://192.168.1.50:11434/v1). Leave blank to install Ollama locally in this container."
+    },
+    {
+      "name": "var_ai_api_key",
+      "label": "AI API Key",
+      "type": "password",
+      "secret": true,
+      "default": "",
+      "help": "Only needed for endpoints that require a key (e.g. OpenAI). Leave blank for Ollama."
+    },
+    {
+      "name": "var_ai_vision_model",
+      "label": "Vision Model",
+      "type": "text",
+      "default": "llava:7b"
+    },
+    {
+      "name": "var_ai_text_model",
+      "label": "Text Model",
+      "type": "text",
+      "default": "gemma3"
+    }
+  ],
   "default_credentials": {
     "username": null,
     "password": null
   },
   "notes": [
     {
-      "text": "Set AI_BASE_URL, AI_VISION_MODEL and AI_TEXT_MODEL in /opt/wardrowbe/backend/.env to point at your Ollama or OpenAI-compatible endpoint, then restart wardrowbe-backend and wardrowbe-worker.",
+      "text": "Provide an existing Ollama/OpenAI-compatible endpoint at install (AI Endpoint URL) to reuse a GPU host elsewhere on your network; leaving it blank installs Ollama locally and pulls the selected vision and text models.",
       "type": "info"
+    },
+    {
+      "text": "Installing Ollama locally and running 7B models on CPU is slow and memory-hungry. Point the AI Endpoint URL at a GPU-backed host, or raise the container to 8 GB+ RAM if you keep Ollama local.",
+      "type": "warning"
     },
     {
       "text": "Ships with DEBUG dev login enabled, which accepts any email address. Configure an OIDC provider (OIDC_ISSUER_URL / OIDC_CLIENT_ID / OIDC_CLIENT_SECRET) and set DEBUG=false for real authentication.",

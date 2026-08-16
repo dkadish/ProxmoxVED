@@ -13,6 +13,25 @@ setting_up_container
 network_check
 update_os
 
+# AI backend selection: an existing OpenAI-compatible/Ollama endpoint is reused
+# as-is; leaving it blank installs Ollama locally in this container.
+var_ai_base_url="${var_ai_base_url:-}"
+var_ai_api_key="${var_ai_api_key:-}"
+var_ai_vision_model="${var_ai_vision_model:-llava:7b}"
+var_ai_text_model="${var_ai_text_model:-gemma3}"
+
+if [[ -z "${var_ai_base_url:-}" ]]; then
+  read -rp "${TAB3}Existing Ollama/OpenAI-compatible endpoint URL (blank installs Ollama locally): " var_ai_base_url
+fi
+
+if [[ -n "$var_ai_base_url" ]]; then
+  AI_BASE_URL="$var_ai_base_url"
+  AI_API_KEY="${var_ai_api_key:-not-needed}"
+else
+  AI_BASE_URL="http://127.0.0.1:11434/v1"
+  AI_API_KEY="not-needed"
+fi
+
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
@@ -29,6 +48,21 @@ PG_VERSION="16" setup_postgresql
 PG_DB_NAME="wardrobe" PG_DB_USER="wardrobe" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
 UV_PYTHON="3.12" setup_uv
+
+if [[ -z "$var_ai_base_url" ]]; then
+  msg_info "Installing Ollama"
+  $STD bash -c "curl -fsSL https://ollama.com/install.sh | sh"
+  for _ in $(seq 1 30); do
+    curl -fsS http://127.0.0.1:11434/api/version >/dev/null 2>&1 && break
+    sleep 2
+  done
+  msg_ok "Installed Ollama"
+
+  msg_info "Pulling AI Models (Patience)"
+  $STD ollama pull "$var_ai_vision_model"
+  $STD ollama pull "$var_ai_text_model"
+  msg_ok "Pulled AI Models"
+fi
 
 fetch_and_deploy_gh_release "wardrowbe" "Anyesh/wardrowbe" "tarball"
 
@@ -53,10 +87,10 @@ DATABASE_URL=postgresql+asyncpg://wardrobe:${PG_DB_PASS}@localhost:5432/wardrobe
 REDIS_URL=redis://127.0.0.1:6379/0
 STORAGE_PATH=/opt/wardrowbe-data/wardrobe
 CORS_ORIGINS=["http://${LOCAL_IP}:3000","http://localhost:3000"]
-AI_BASE_URL=http://127.0.0.1:11434/v1
-AI_API_KEY=not-needed
-AI_VISION_MODEL=llava:7b
-AI_TEXT_MODEL=gemma3:latest
+AI_BASE_URL=${AI_BASE_URL}
+AI_API_KEY=${AI_API_KEY}
+AI_VISION_MODEL=${var_ai_vision_model}
+AI_TEXT_MODEL=${var_ai_text_model}
 AI_INTERNAL_ENABLED=true
 EOF
 cat <<EOF >/opt/wardrowbe/frontend/.env
