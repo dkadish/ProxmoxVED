@@ -1,0 +1,46 @@
+{
+  "name": "Wardrowbe",
+  "slug": "wardrowbe",
+  "categories": [
+    24
+  ],
+  "date_created": "2026-08-16",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/Anyesh/wardrowbe",
+  "website": "https://github.com/Anyesh/wardrowbe",
+  "repository": "https://github.com/Anyesh/wardrowbe",
+  "architectures": ["amd64"],
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/wardrowbe.webp",
+  "description": "Wardrowbe is a self-hosted, AI-powered wardrobe manager: photograph your clothes, auto-tag them with any OpenAI-compatible vision model, and get outfit recommendations based on weather and occasion.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/wardrowbe.sh",
+      "config_path": "/opt/wardrowbe/backend/.env",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Set AI_BASE_URL, AI_VISION_MODEL and AI_TEXT_MODEL in /opt/wardrowbe/backend/.env to point at your Ollama or OpenAI-compatible endpoint, then restart wardrowbe-backend and wardrowbe-worker.",
+      "type": "info"
+    },
+    {
+      "text": "Ships with DEBUG dev login enabled, which accepts any email address. Configure an OIDC provider (OIDC_ISSUER_URL / OIDC_CLIENT_ID / OIDC_CLIENT_SECRET) and set DEBUG=false for real authentication.",
+      "type": "warning"
+    }
+  ]
+}
