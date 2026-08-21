@@ -22,8 +22,8 @@
       "config_path": "/opt/wardrowbe/backend/.env",
       "resources": {
         "cpu": 4,
-        "ram": 4096,
-        "hdd": 20,
+        "ram": 8192,
+        "hdd": 24,
         "os": "Debian",
         "version": "13"
       }
@@ -68,7 +68,7 @@
       "type": "info"
     },
     {
-      "text": "Installing Ollama locally and running 7B models on CPU is slow and memory-hungry. Point the AI Endpoint URL at a GPU-backed host, or raise the container to 8 GB+ RAM if you keep Ollama local.",
+      "text": "Defaults to 8 GB RAM / 24 GB disk so a locally installed Ollama can run and store its models; CPU-only 7B inference is still slow. If you point the AI Endpoint URL at an external GPU-backed host, you can safely lower the container to ~4 GB RAM / 16 GB disk.",
       "type": "warning"
     },
     {
