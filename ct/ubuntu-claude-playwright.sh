@@ -44,11 +44,25 @@ function update_script() {
 }
 
 start
+
+if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
+  if command -v whiptail &>/dev/null && [ -t 0 ] && [[ "$TERM" != "dumb" ]]; then
+    ANTHROPIC_API_KEY=$(whiptail \
+      --backtitle "Proxmox VE Helper Scripts" \
+      --title "ANTHROPIC API KEY" \
+      --passwordbox "\nEnter your Anthropic API key (sk-ant-...):\n(Leave empty to configure later)" \
+      10 60 3>&1 1>&2 2>&3) || true
+  fi
+fi
+export ANTHROPIC_API_KEY
+
 build_container
 description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}SSH into the container and run:${CL}"
-echo -e "${GATEWAY}${BGN}  export ANTHROPIC_API_KEY=your_key_here${CL}"
-echo -e "${GATEWAY}${BGN}  claude${CL}"
+echo -e "${INFO}${YW}RDP access: ${BGN}${IP}:3389${CL}"
+echo -e "${INFO}${YW}RDP credentials are saved in the container at: ${BGN}/root/.rdp-credentials${CL}"
+if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
+  echo -e "${INFO}${YW}No API key provided — set ${BGN}ANTHROPIC_API_KEY${YW} in ${BGN}/etc/environment${YW} inside the container${CL}"
+fi
