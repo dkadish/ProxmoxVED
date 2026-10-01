@@ -5,7 +5,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # License: MIT
 # Source: https://claude.ai | https://playwright.dev
 
-APP="Ubuntu Claude + Playwright MCP"
+APP="Claude-Playwright"
 var_tags="${var_tags:-ai;automation}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
